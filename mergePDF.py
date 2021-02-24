@@ -2,13 +2,6 @@ import os
 import natsort
 from PyPDF2 import PdfFileMerger
 
-#TODO: add option to specify order of merging by outputting list of names
-# and asking user to enter csv list of array indices
-
-# USAGE
-# 1. activate python venv
-# 2. python3 merge.py
-
 def get_dir():
     dir = input("Enter the full directory path of pdfs you want to merge: ")
     # check for proper formatting of dir
@@ -29,14 +22,14 @@ def merge_files(paths):
         merger.append(pdf);
     return merger
 
-if __name__ == '__main__':
+def merge():
     dir = get_dir()
     pdf_files = get_files(dir)
     merged = merge_files(pdf_files)
     # write the entire merged pdf then close the merger
     # last / in dir name causes an empty string at end of list so filter it out
     parent_dir = list(filter(None, dir.split('/')))[-1]
-    output_name = dir + parent_dir + "-merged" + ".pdf"
+    output_name = dir + parent_dir + "-merged.pdf"
     print("Writing merged PDF to: " + output_name)
     merged.write(output_name)
     merged.close()
