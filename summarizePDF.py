@@ -1,9 +1,10 @@
-import pdfplumber
 import os
+
+import pdfplumber
+import spacy
+from fpdf import FPDF
 from summarizer import Summarizer
 from summarizer.coreference_handler import CoreferenceHandler
-from fpdf import FPDF
-import spacy
 
 
 def use_coreference():

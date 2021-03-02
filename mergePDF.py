@@ -1,7 +1,8 @@
-import os
+from pathlib import Path
+
 import natsort
 from PyPDF2 import PdfFileMerger
-from pathlib import Path
+
 
 def get_dir():
     dir_path = Path(input("Enter the full directory path of pdfs you want to merge: "))
