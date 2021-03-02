@@ -1,35 +1,31 @@
 import os
 import natsort
 from PyPDF2 import PdfFileMerger
+from pathlib import Path
 
 def get_dir():
-    dir = input("Enter the full directory path of pdfs you want to merge: ")
-    # check for proper formatting of dir
-    if dir[-1] != '/':
-        dir += '/'
+    dir_path = Path(input("Enter the full directory path of pdfs you want to merge: "))
     # expand ~ for user home directory, needed because python is processing the dir string
-    return os.path.expanduser(dir)
+    return dir_path.expanduser()
 
 def get_files(dir):
     # python sorted() doesnt do alphanumeric (natural) sort
-    alphanum_sorted = natsort.natsorted([name for name in os.listdir(dir) if name.endswith(".pdf")])
-    return [dir + name for name in alphanum_sorted if name.endswith(".pdf")]
+    alphanum_sorted = natsort.natsorted(dir.glob("*.pdf"))
+    return alphanum_sorted
 
 def merge_files(paths):
     merger = PdfFileMerger()
     for pdf in paths:
-        print("Merging: " + pdf)
-        merger.append(pdf);
+        print("Merging: " + str(pdf))
+        merger.append(str(pdf));
     return merger
 
 def merge():
-    dir = get_dir()
-    pdf_files = get_files(dir)
+    file_dir = get_dir()
+    pdf_files = get_files(file_dir)
     merged = merge_files(pdf_files)
     # write the entire merged pdf then close the merger
-    # last / in dir name causes an empty string at end of list so filter it out
-    parent_dir = list(filter(None, dir.split('/')))[-1]
-    output_name = dir + parent_dir + "-merged.pdf"
-    print("Writing merged PDF to: " + output_name)
-    merged.write(output_name)
+    output_path = file_dir / "{}-merged.pdf".format(str(file_dir.name))
+    print("Writing merged PDF to: " + str(output_path))
+    merged.write(str(output_path))
     merged.close()
