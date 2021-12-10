@@ -7,6 +7,7 @@ cymem==2.0.5
 fpdf==1.7.2
 idna==2.10
 Jinja2==2.11.3
+lxml==4.6.4
 MarkupSafe==1.1.1
 murmurhash==1.0.5
 natsort==7.1.1
@@ -15,6 +16,7 @@ packaging==20.9
 pathy==0.4.0
 pdfminer.six==20200517
 pdfplumber==0.5.27
+pikepdf==4.1.0
 Pillow==8.1.1
 preshed==3.0.5
 pycryptodome==3.10.1

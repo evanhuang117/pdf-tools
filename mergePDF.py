@@ -2,7 +2,10 @@ from pathlib import Path
 
 import natsort
 from PyPDF2 import PdfFileMerger
-
+import glob
+import tqdm
+import os
+import pikepdf
 
 def get_dir():
     dir_path = Path(input("Enter the full directory path of pdfs you want to merge: "))
@@ -11,14 +14,29 @@ def get_dir():
 
 def get_files(dir):
     # python sorted() doesnt do alphanumeric (natural) sort
+    # convert_pptx(dir)
     alphanum_sorted = natsort.natsorted(dir.glob("*.pdf"))
     return alphanum_sorted
+
+# this requires unoconv to be installed
+def convert_pptx(dir):
+    extension = "pptx"
+    files = [f for f in glob.glob(dir + "/**/*.{}".format(extension), recursive=True)]
+    for f in tqdm.tqdm(files):
+        command = "unoconv -f pdf \"{}\"".format(f)
+        os.system(command)
 
 def merge_files(paths):
     merger = PdfFileMerger()
     for pdf in paths:
-        print("Merging: " + str(pdf))
-        merger.append(str(pdf));
+        try:
+            print(f"Merging: {str(pdf)}")
+            merger.append(str(pdf));
+        except ValueError:
+            repaired = pikepdf.open(pdf, allow_overwriting_input=True)
+            repaired.save(pdf)
+            print(f"\tRepairing: {str(pdf)}")
+            merger.append(str(pdf));
     return merger
 
 def merge():
